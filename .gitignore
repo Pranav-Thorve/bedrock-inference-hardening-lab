@@ -1,8 +1,11 @@
+__pycache__/
+.DS_Store
 .terraform/
 *.tfstate
 *.tfstate.*
 *.tfvars
-crash.log
 *.zip
-.DS_Store
+build/
+crash.log
 lambda.zip
+terraform.tfvars

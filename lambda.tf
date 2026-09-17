@@ -1,7 +1,7 @@
 data "archive_file" "lambda" {
   type        = "zip"
-  source_file = "${path.module}/src/handler.py"
-  output_path = "${path.module}/lambda.zip"
+  source_file = "${path.module}/src/${local.handler_module}.py"
+  output_path = "${path.module}/build/${local.handler_module}.zip"
 }
 
 resource "aws_cloudwatch_log_group" "lambda" {
@@ -14,14 +14,15 @@ resource "aws_lambda_function" "handler" {
   role             = aws_iam_role.lambda.arn
   filename         = data.archive_file.lambda.output_path
   source_code_hash = data.archive_file.lambda.output_base64sha256
-  handler          = "handler.handler"
+  handler          = "${local.handler_module}.handler"
   runtime          = "python3.12"
   timeout          = 30
   memory_size      = 256
 
   environment {
     variables = {
-      MODEL_ID = var.model_id
+      MODEL_ID  = var.model_id
+      LAB_STAGE = tostring(var.lab_stage)
     }
   }
 
